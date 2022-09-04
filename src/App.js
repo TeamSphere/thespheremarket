@@ -2,6 +2,7 @@ import logo from './theSphereLogo.png';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import 'sf-font';
 
 function App() {
@@ -30,6 +31,186 @@ function App() {
           </div>
         </header>
 
+
+        <div class="wrapper container">
+        <div className="mt-4 container container-style">
+          <div className='col'>
+            <body className="nftminter">
+              <form>
+              <div className="row pt-3 px-4">
+                <div>
+                  <h2 className="pt-2" style={{ fontWeight: "300" }}>Sphere NFT Minter</h2>
+                </div>
+                <h4 style={{fontFamily: "SF Pro Display", fontWeight: "400"}}>/1000</h4>
+                <h6 style={{fontFamily: "SF Pro Display", fontWeight: "300"}}>Your Wallet Address</h6>
+                <div className="pb-3" id='wallet-address' style={{
+                  color: "#ffa700",
+                  fontFamily: "SF Pro Display",
+                  fontWeight: "400"
+                }}>
+                  <label style={{fontFamily: "SF Pro Display"}}for="floatingInput">Please Connect Wallet</label>
+                </div>
+              </div>
+              <div className="pt-4 row">
+                <label style={{ fontWeight: "300", fontSize: "18px" }}>Select NFT Quantity</label>
+              </div>
+              <ButtonGroup size="lg"
+                aria-label="First group"
+                name="amount"
+                style={{ backgroundColor: "#ffa700" }}
+              >
+                <Button value="1">1</Button>
+                <Button value="2">2</Button>
+                <Button value="3">3</Button>
+                <Button value="4">4</Button>
+                <Button value="5">5</Button>
+              </ButtonGroup>
+              <h6 className="pt-5" style={{ fontFamily: "SF Pro Display", fontWeight: "300", fontSize: "18px" }}>Buy with your preferred crypto!</h6>
+              <div className="row px-2 pb-2 row-style">
+                <div className="col ">
+                  <Button className="button-style" style={{ fontFamily: "SF Pro Display", fontWeight: "400", width: "100px", color: 'black', border: "0.2px", borderRadius: "14px" }}>
+                    <img src={logo} width="100%" />SPHC
+                  </Button>
+                </div>
+                <div className="col">
+                  <Button className="button-style" style={{ fontFamily: "SF Pro Display", fontWeight: "400", width: "100px", color: 'black', border: "0.2px", borderRadius: "14px"}}>
+                    <img src="usdt.png" width="100%" />USD-T
+                  </Button>
+                </div>
+                <div className="col">
+                  <Button className="button-style" style={{ fontFamily: "SF Pro Display", fontWeight: "400", width: "100px", color: 'black', border: "0.2px", borderRadius: "14px"}}>
+                    <img src="matic.png" width="100%" />MATIC
+                  </Button>
+                </div>
+                <div>
+                  <div id='txout' style={{ color: "#ffa700", marginTop: "30px", fontSize: '20px', fontWeight: '500' }}>
+                    <p style={{ fontSize: "20px" }}>Transfer Status</p>
+                  </div>
+                </div>
+              </div>
+            </form>
+            </body>
+          </div>
+        </div>
+
+        <div className="mt-4 container container-style">
+          <div className='col'>
+            <body className='nftstaker'>
+              <form className="pt-4" style={{ fontFamily: "SF Pro Display" }} >
+                <h2 style={{ borderRadius: '14px', fontWeight: "300" }}>Sphere NFT Staking Vault </h2>
+                <h6 style={{ fontWeight: "300" }}>First time staking?</h6>
+                <Button className="btn" style={{  }} >Authorize Your Wallet</Button>
+                <div className="row px-3">
+                  <div className="col">
+                    <form class="stakingrewards" style={{ borderRadius: "25px" }}>
+                      <h5 style={{ color: "#000", fontWeight: '300' }}>Your Vault Activity</h5>
+                      <h6 style={{ color: "#000" }}>Verify Staked Amount</h6>
+                      <Button style={{ backgroundColor: "#ffffff10" }} >Verify</Button>
+                      <table className='table mt-3 mb-5 px-3 table-dark'>
+                        <tr>
+                          <td style={{ fontSize: "19px", color: "#000" }}>Your Staked NFTs:
+                            <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='yournfts'></span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontSize: "19px", color: "#000" }}>Total Staked NFTs:
+                            <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='stakedbalance'></span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontSize: "19px", color: "#000" }}>Unstake All Staked NFTs
+                            <Button className='mb-3' style={{ backgroundColor: "#ffffff10" }}>Unstake All</Button>
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                    <img className="col-lg-4" src="art.png"/>
+                    <div className="col">
+                      <form className='stakingrewards' style={{ borderRadius: "25px", fontFamily: "SF Pro Display" }}>
+                        <h5 style={{ color: "#000", fontWeight: '300' }}> Staking Rewards</h5>
+                        <Button style={{ backgroundColor: "#ffffff10" }} >Earned N2D Rewards</Button>
+                        <div id='earned' style={{ color: "#ffa700", marginTop: "5px", fontSize: '25px', fontWeight: '500' }}><p style={{ fontSize: "20px" }}>Earned Tokens</p></div>
+                        <div className='col-12 mt-2'>
+                          <div style={{ color: 'black' }}>Claim Rewards</div>
+                          <Button style={{ backgroundColor: "#ffffff10" }} className="mb-2">Claim</Button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div className="row px-4 pt-2">
+                    <div class="header">
+                      <div style={{ fontSize: '25px', borderRadius: '14px', color: "#000", fontWeight: "300" }}>Sphere NFT Staking Pool Active Rewards</div>
+                      <table className='table px-3 table-bordered table-dark'>
+                        <thead className='thead-light'>
+                          <tr>
+                            <th scope="col">Collection</th>
+                            <th scope="col">Rewards Per Day</th>
+                            <th scope="col">Exchangeable Items</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Sphere Bronze Collection</td>
+                            <td class="amount" data-test-id="rewards-summary-ads">
+                              <span class="amount">0.50</span>&nbsp;<span class="currency">SPHC</span>
+                            </td>
+                            <td class="exchange">
+                              <span class="amount">2</span>&nbsp;<span class="currency">NFTs/M</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Sphere Silver Collection</td>
+                            <td class="amount" data-test-id="rewards-summary-ac">
+                              <span class="amount">2.50</span>&nbsp;<span class="currency">SPHC</span>
+                            </td>
+                            <td class="exchange"><span class="amount">10</span>&nbsp;<span class="currency">NFTs/M</span>
+                            </td>
+                          </tr>
+                          <tr className='stakegoldeffect'>
+                            <td>Sphere Gold Collection</td>
+                            <td class="amount" data-test-id="rewards-summary-one-time"><span class="amount">1</span>&nbsp;<span class="currency">SPHC+</span>
+                            </td>
+                            <td class="exchange">
+                              <span class="amount">25 NFTs/M or </span>
+                              <span class="currency">100 SPHC/M</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div class="header">
+                        <div style={{ fontSize: '25px', borderRadius: '14px', fontWeight: '300' }}>SPHC Token Stake Farms</div>
+                        <table className='table table-bordered table-dark' style={{ borderRadius: '14px' }} >
+                          <thead className='thead-light'>
+                            <tr>
+                              <th scope="col">Farm Pools</th>
+                              <th scope="col">Harvest Daily Earnings</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Stake SPHC to Earn SPHC</td>
+                              <td class="amount" data-test-id="rewards-summary-ads">
+                                <span class="amount">0.01</span>&nbsp;<span class="currency">Per SPHC</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Stake SPHC to Earn SPHC+</td>
+                              <td class="amount" data-test-id="rewards-summary-ac">
+                                <span class="amount">0.005</span>&nbsp;<span class="currency">Per SPHC</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+              </form>
+            </body>
+          </div>
+        </div>
+        </div>
         <div class="container">
           <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
             <div style={{ fontFamily: "SF Pro Display" }} class="col-md-4 d-flex align-items-center">

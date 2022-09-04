@@ -56,3 +56,49 @@
   color: #fff;
   border: 1px solid #fff;
 }
+
+.nftminter {
+  background: #fefefe;
+  font-family: "SF Pro Display";
+  font-weight: 400;
+  color: black;
+  border-radius: 8px !important;
+  box-shadow: 0 0 1px 1px #fdfdfd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary {
+  background: #ffa700 !important;
+  border: 1px solid #ffa700 !important;
+}
+
+.button-style {
+  background: #fff !important;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  justify-items: stretch;
+  align-items: stretch;
+}
+.container-style {
+
+}
+
+
+.nftstaker {
+  background: #fefefe;
+  font-family: "SF Pro Display";
+  font-weight: 400;
+  color: black;
+  border-radius: 8px !important;
+  box-shadow: 0 0 1px 1px #fdfdfd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
