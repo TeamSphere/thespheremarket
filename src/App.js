@@ -4,12 +4,68 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import 'sf-font';
+import axios from 'axios';
 
-function App() {
+var account = null;
+var contract = null;
+var vaultcontract = null;
+var web3 = null;
+
+const NFTCONTRACT = "0xC6Ad2824B03275D4cC5E8f4f61c5a143b999717b";
+const STAKINGCONTRACT = "0x09aE75315fE2E63271B4F218C4b00F4fF143052A"
+const polygonscanapikey = "DBQX5JUSAVUZRK8CC4IN2UZF9N2HA63P4U";
+const polygonscanapi = "https://api-testnet.polygonscan.com/api"
+const moralisapi = "https://deep-index.moralis.io/api/v2/";
+const moralisapikey = "2VBV4vaCLiuGu6Vu7epXKlFItGe3jSPON8WV4CrXKYaNBEazEUrf1xwHxbrIo1oM";
+const nftpng = "https://ipfs.io/ipfs/QmavM8Zpo9bD3r4zEnhbbBLLvHyfr1YL7f1faG3ovaeSSG/";
+
+class App extends Component {
+  constructor() {
+		super();
+		this.state = {
+			balance: [],
+			nftdata: [],
+			rawearn: [],
+		};
+	}
+
+  handleModal(){
+		this.setState({show:!this.state.show})
+	}
+
+	handleNFT(nftamount) {
+		this.setState({outvalue:nftamount.target.value});
+  	}
+
+	async componentDidMount() {
+
+		await axios.get((polygonscanapi + `?module=stats&action=tokensupply&contractaddress=${NFTCONTRACT}&apikey=${polygonscanapikey}`))
+		.then(outputa => {
+            this.setState({
+                balance:outputa.data
+            })
+            console.log(outputa.data)
+        })
+		let config = {'X-API-Key': moralisapikey, 'accept': 'application/json'};
+		await axios.get((moralisapi + `/nft/${NFTCONTRACT}/owners?chain=mumbai&format=decimal`), {headers: config})
+		.then(outputb => {
+			const { result } = outputb.data
+            this.setState({
+                nftdata:result
+            })
+            console.log(outputb.data)
+        })
+	}
+
+  render() {
+  	const {balance} = this.state;
+  	const {nftdata} = this.state;
+  	const {outvalue} = this.state;
+
   return (
     <div className="App">
       <body>
-        <header class="p-3 text-bg-light">
+        <header class="p-1 text-bg-light">
           <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" style={{ fontFamily: "SF Pro Display" }}>
               <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none" style={{ fontWeight: "600", fontSize: '25px' }}>
@@ -89,125 +145,157 @@ function App() {
                 </div>
               </div>
             </form>
-            </body>
-          </div>
+          </body>
         </div>
+      </div>
 
-        <div className="mt-4 container container-style">
-          <div className='col'>
-            <body className='nftstaker'>
-              <form className="pt-4" style={{ fontFamily: "SF Pro Display" }} >
-                <h2 style={{ borderRadius: '14px', fontWeight: "300" }}>Sphere NFT Staking Vault </h2>
-                <h6 style={{ fontWeight: "300" }}>First time staking?</h6>
-                <Button className="btn" style={{  }} >Authorize Your Wallet</Button>
-                <div className="row px-3">
-                  <div className="col">
-                    <form class="stakingrewards" style={{ borderRadius: "25px" }}>
-                      <h5 style={{ color: "#000", fontWeight: '300' }}>Your Vault Activity</h5>
-                      <h6 style={{ color: "#000" }}>Verify Staked Amount</h6>
-                      <Button style={{ backgroundColor: "#ffffff10" }} >Verify</Button>
-                      <table className='table mt-3 mb-5 px-3 table-dark'>
-                        <tr>
-                          <td style={{ fontSize: "19px", color: "#000" }}>Your Staked NFTs:
-                            <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='yournfts'></span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ fontSize: "19px", color: "#000" }}>Total Staked NFTs:
-                            <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='stakedbalance'></span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style={{ fontSize: "19px", color: "#000" }}>Unstake All Staked NFTs
-                            <Button className='mb-3' style={{ backgroundColor: "#ffffff10" }}>Unstake All</Button>
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
-                    <img className="col-lg-4" src="art.png"/>
-                    <div className="col">
-                      <form className='stakingrewards' style={{ borderRadius: "25px", fontFamily: "SF Pro Display" }}>
-                        <h5 style={{ color: "#000", fontWeight: '300' }}> Staking Rewards</h5>
-                        <Button style={{ backgroundColor: "#ffffff10" }} >Earned N2D Rewards</Button>
-                        <div id='earned' style={{ color: "#ffa700", marginTop: "5px", fontSize: '25px', fontWeight: '500' }}><p style={{ fontSize: "20px" }}>Earned Tokens</p></div>
-                        <div className='col-12 mt-2'>
-                          <div style={{ color: 'black' }}>Claim Rewards</div>
-                          <Button style={{ backgroundColor: "#ffffff10" }} className="mb-2">Claim</Button>
-                        </div>
-                      </form>
-                    </div>
+      <div className="mt-4 container container-style">
+        <div className='col'>
+          <body className='nftstaker'>
+            <form className="pt-4" style={{ fontFamily: "SF Pro Display" }} >
+              <h2 style={{ borderRadius: '14px', fontWeight: "300" }}>Sphere NFT Staking Vault </h2>
+              <h6 style={{ fontWeight: "300" }}>First time staking?</h6>
+              <Button className="btn" style={{  }} >Authorize Your Wallet</Button>
+              <div className="row px-3 py-4">
+                <div className="col">
+                  <form class="stakingrewards" style={{ borderRadius: "25px" }}>
+                    <h5 style={{ color: "#000", fontWeight: '300' }}>Your Vault Activity</h5>
+                    <h6 style={{ color: "#000" }}>Verify Staked Amount</h6>
+                    <Button style={{ backgroundColor: "#ffffff10" }} >Verify</Button>
+                    <table className='table mt-3 mb-5 px-3 table-dark'>
+                      <tr>
+                        <td style={{ fontSize: "19px", color: "#000" }}>Your Staked NFTs:
+                          <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='yournfts'></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ fontSize: "19px", color: "#000" }}>Total Staked NFTs:
+                          <span style={{ backgroundColor: "#ffffff00", fontSize: "21px", color: "#000", fontWeight: "500" }} id='stakedbalance'></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ fontSize: "19px", color: "#000" }}><p style={{ backgroundColor: "white", paddingBottom: "0px", marginBottom: "0px" }}>Unstake All Staked NFTs</p>
+                          <Button className='mb-3' style={{ backgroundColor: "#ffffff10" }}>Unstake All</Button>
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
                   </div>
-                  <div className="row px-4 pt-2">
+                  <img style={{ width: "40%" }} className="col-lg-4" src="art.png"/>
+                  <div className="col">
+                    <form className='stakingrewards' style={{ borderRadius: "25px", fontFamily: "SF Pro Display" }}>
+                      <h5 style={{ color: "#000", fontWeight: '300' }}> Staking Rewards</h5>
+                      <Button style={{ backgroundColor: "#ffffff10" }} >Earned N2D Rewards</Button>
+                      <div id='earned' style={{ color: "#ffa700", marginTop: "5px", fontSize: '25px', fontWeight: '500' }}><p style={{ fontSize: "20px" }}>Earned Tokens</p></div>
+                      <div className='col-12 mt-2'>
+                        <div style={{ color: 'black' }}>Claim Rewards</div>
+                        <Button style={{ backgroundColor: "#ffffff10" }} className="mb-2">Claim</Button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="row px-4 pt-2">
+                  <div class="header">
+                    <div style={{ fontSize: '25px', borderRadius: '14px', color: "#000", fontWeight: "300" }}>Sphere NFT Staking Pool Active Rewards</div>
+                    <table className='table px-3 table-bordered table-dark'>
+                      <thead className='thead-light'>
+                        <tr>
+                          <th scope="col">Collection</th>
+                          <th scope="col">Rewards Per Day</th>
+                          <th scope="col">Exchangeable Items</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Sphere Bronze Collection</td>
+                          <td class="amount" data-test-id="rewards-summary-ads">
+                            <span class="amount">0.50</span>&nbsp;<span class="currency">SPHC</span>
+                          </td>
+                          <td class="exchange">
+                            <span class="amount">2</span>&nbsp;<span class="currency">NFTs/M</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Sphere Silver Collection</td>
+                          <td class="amount" data-test-id="rewards-summary-ac">
+                            <span class="amount">2.50</span>&nbsp;<span class="currency">SPHC</span>
+                          </td>
+                          <td class="exchange"><span class="amount">10</span>&nbsp;<span class="currency">NFTs/M</span>
+                          </td>
+                        </tr>
+                        <tr className='stakegoldeffect'>
+                          <td>Sphere Gold Collection</td>
+                          <td class="amount" data-test-id="rewards-summary-one-time"><span class="amount">1</span>&nbsp;<span class="currency">SPHC+</span>
+                          </td>
+                          <td class="exchange">
+                            <span class="amount">25 NFTs/M or </span>
+                            <span class="currency">100 SPHC/M</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
                     <div class="header">
-                      <div style={{ fontSize: '25px', borderRadius: '14px', color: "#000", fontWeight: "300" }}>Sphere NFT Staking Pool Active Rewards</div>
-                      <table className='table px-3 table-bordered table-dark'>
+                      <div style={{ fontSize: '25px', borderRadius: '14px', fontWeight: '300' }}>SPHC Token Stake Farms</div>
+                      <table className='table table-bordered table-dark' style={{ borderRadius: '14px' }} >
                         <thead className='thead-light'>
                           <tr>
-                            <th scope="col">Collection</th>
-                            <th scope="col">Rewards Per Day</th>
-                            <th scope="col">Exchangeable Items</th>
+                            <th scope="col">Farm Pools</th>
+                            <th scope="col">Harvest Daily Earnings</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <td>Sphere Bronze Collection</td>
+                            <td>Stake SPHC to Earn SPHC</td>
                             <td class="amount" data-test-id="rewards-summary-ads">
-                              <span class="amount">0.50</span>&nbsp;<span class="currency">SPHC</span>
-                            </td>
-                            <td class="exchange">
-                              <span class="amount">2</span>&nbsp;<span class="currency">NFTs/M</span>
+                              <span class="amount">0.01</span>&nbsp;<span class="currency">Per SPHC</span>
                             </td>
                           </tr>
                           <tr>
-                            <td>Sphere Silver Collection</td>
+                            <td>Stake SPHC to Earn SPHC+</td>
                             <td class="amount" data-test-id="rewards-summary-ac">
-                              <span class="amount">2.50</span>&nbsp;<span class="currency">SPHC</span>
-                            </td>
-                            <td class="exchange"><span class="amount">10</span>&nbsp;<span class="currency">NFTs/M</span>
-                            </td>
-                          </tr>
-                          <tr className='stakegoldeffect'>
-                            <td>Sphere Gold Collection</td>
-                            <td class="amount" data-test-id="rewards-summary-one-time"><span class="amount">1</span>&nbsp;<span class="currency">SPHC+</span>
-                            </td>
-                            <td class="exchange">
-                              <span class="amount">25 NFTs/M or </span>
-                              <span class="currency">100 SPHC/M</span>
+                              <span class="amount">0.005</span>&nbsp;<span class="currency">Per SPHC</span>
                             </td>
                           </tr>
                         </tbody>
                       </table>
-
-                      <div class="header">
-                        <div style={{ fontSize: '25px', borderRadius: '14px', fontWeight: '300' }}>SPHC Token Stake Farms</div>
-                        <table className='table table-bordered table-dark' style={{ borderRadius: '14px' }} >
-                          <thead className='thead-light'>
-                            <tr>
-                              <th scope="col">Farm Pools</th>
-                              <th scope="col">Harvest Daily Earnings</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>Stake SPHC to Earn SPHC</td>
-                              <td class="amount" data-test-id="rewards-summary-ads">
-                                <span class="amount">0.01</span>&nbsp;<span class="currency">Per SPHC</span>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Stake SPHC to Earn SPHC+</td>
-                              <td class="amount" data-test-id="rewards-summary-ac">
-                                <span class="amount">0.005</span>&nbsp;<span class="currency">Per SPHC</span>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </body>
+          </div>
+        </div>
+        <div className="container container-style">
+          <div className="row items px-3 pt-3">
+            <div className="ml-3 mr-3" style={{ display: "inline-grid", gridTemplateColumns: "repeat(4, 5fr)", columnGap: "20px" }}>
+              {nftdata.map((result, i) => {
+                async function stakeit() {
+                  vaultcontract.methods.stake([result.token_id]).send({ from: account });
+                }
+                async function unstakeit() {
+                  vaultcontract.methods.unstake([result.token_id]).send({ from: account });
+                }
+                return (
+                  <div className="card nft-card mt-3" key={i} >
+                    <div className="image-over">
+                      <img className="card-img-top" src={nftpng + result.token_id + '.png'} alt="" />
+                    </div>
+                    <div className="card-caption col-12 p-0">
+                      <div className="card-body">
+                        <h5 className="mb-0">Sphere Collection NFT #{result.token_id}</h5>
+                        <h6 className="mb-0 mt-2">Location Status<p style={{ color: "#ffa700", fontWeight: "bold" }}>{result.owner_of}</p></h6>
+                        <div className="card-bottom d-flex justify-content-between">
+                          <input key={i} type="hidden" id='stakeid' value={result.token_id} />
+                          <Button style={{ marginLeft: '2px', backgroundColor: "#ffffff10" }} onClick={stakeit}>Stake it</Button>
+                          <Button style={{ marginLeft: '2px', backgroundColor: "#ffffff10" }} onClick={unstakeit}>Unstake it</Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  </div>
-              </form>
-            </body>
+                );
+              })}
+            </div>
           </div>
         </div>
         </div>
@@ -232,6 +320,7 @@ function App() {
       </body>
     </div>
   );
+};
 }
 
 export default App;

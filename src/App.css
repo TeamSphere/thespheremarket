@@ -81,15 +81,14 @@
 .wrapper {
   display: grid;
   grid-template-columns: 400px 1fr;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
+  grid-gap: 10px;
   justify-items: stretch;
   align-items: stretch;
 }
-.container-style {
 
+.container-style:nth-child(3) {
+  grid-column: span 2;
 }
-
 
 .nftstaker {
   background: #fefefe;
@@ -101,4 +100,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@keyframes glow2 {
+  from {
+    box-shadow: 0 0 4px -1px #ffa700;
+  }
+  to {
+    box-shadow: 0 0 10px 7px #ffa700;
+  }
+}
+
+.stakegoldeffect {
+  animation: glow2 2s infinite alternate;
+}
+
+.errorsearch {
+  background: black;
 }
