@@ -5,19 +5,53 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import 'sf-font';
 import axios from 'axios';
+import ABI from './ABI.json';
+import VAULTABI from './VAULTABI.json';
+import TOKENABI from './TOKENABI.json';
+import { NFTCONTRACT, STAKINGCONTRACT, nftpng, polygonscanapi, moralisapi } from './config';
+
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletLink from "walletlink"
+import Web3 from "web3";
 
 var account = null;
 var contract = null;
 var vaultcontract = null;
 var web3 = null;
 
-const NFTCONTRACT = "0xC6Ad2824B03275D4cC5E8f4f61c5a143b999717b";
-const STAKINGCONTRACT = "0x09aE75315fE2E63271B4F218C4b00F4fF143052A"
 const polygonscanapikey = "DBQX5JUSAVUZRK8CC4IN2UZF9N2HA63P4U";
-const polygonscanapi = "https://api-testnet.polygonscan.com/api"
-const moralisapi = "https://deep-index.moralis.io/api/v2/";
 const moralisapikey = "2VBV4vaCLiuGu6Vu7epXKlFItGe3jSPON8WV4CrXKYaNBEazEUrf1xwHxbrIo1oM";
-const nftpng = "https://ipfs.io/ipfs/QmavM8Zpo9bD3r4zEnhbbBLLvHyfr1YL7f1faG3ovaeSSG/";
+
+const providerOptions = {
+	binancechainwallet: {
+		package: true
+	  },
+	  walletconnect: {
+		package: WalletConnectProvider,
+		options: {
+		  infuraId: "3cf2d8833a2143b795b7796087fff369"
+		}
+	},
+	walletlink: {
+		package: WalletLink,
+		options: {
+		  appName: "Net2Dev NFT Minter",
+		  infuraId: "3cf2d8833a2143b795b7796087fff369",
+		  rpc: "",
+		  chainId: 4,
+		  appLogoUrl: null,
+		  darkMode: true
+		}
+	  },
+};
+
+const web3Modal = new Web3Modal({
+	network: "rinkeby",
+	theme: "dark",
+	cacheProvider: true,
+	providerOptions
+});
 
 class App extends Component {
   constructor() {
@@ -57,11 +91,29 @@ class App extends Component {
         })
 	}
 
-  render() {
-  	const {balance} = this.state;
-  	const {nftdata} = this.state;
-  	const {outvalue} = this.state;
+render() {
+	const {balance} = this.state;
+	const {nftdata} = this.state;
+	const {outvalue} = this.state;
 
+  async function connectwallet() {
+    var provider = await web3Modal.connect();
+    web3 = new Web3(provider);
+    await provider.send('eth_requestAccounts');
+    var accounts = await web3.eth.getAccounts();
+    account = accounts[0];
+    document.getElementById('wallet-address').textContent = account;
+    contract = new web3.eth.Contract(ABI, NFTCONTRACT);
+    vaultcontract = new web3.eth.Contract(VAULTABI, STAKINGCONTRACT);
+    var getstakednfts = await vaultcontract.methods.tokensOfOwner(account).call();
+    document.getElementById('yournfts').textContent = getstakednfts;
+    var getbalance = Number(await vaultcontract.methods.balanceOf(account).call());
+    document.getElementById('stakedbalance').textContent = getbalance;
+    const arraynft = Array.from(getstakednfts.map(Number));
+    console.log(arraynft);
+    const tokenid = arraynft.filter(Number);
+    var rwdArray = [];
+  }
   return (
     <div className="App">
       <body>
@@ -81,7 +133,7 @@ class App extends Component {
               </ul>
 
               <div class="text-end">
-                <button id="connectbtn" type="button" class="connectbutton">Connect Wallet</button>
+                <button id="connectbtn" onClick={connectwallet} type="button" class="connectbutton">Connect Wallet</button>
               </div>
             </div>
           </div>
